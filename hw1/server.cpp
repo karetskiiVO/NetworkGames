@@ -15,7 +15,7 @@ void to_json (json& j, const Test& t) {
     j = json{ {"num", t.num}, {"str", t.str} };
 }
 
-int main (int argc, char *argv[]) {
+int main (int argc, char* argv[]) {
     auto program = argparse::ArgumentParser{};
     int port;
 
