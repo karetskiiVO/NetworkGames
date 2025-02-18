@@ -9,6 +9,7 @@ class UDPAddr {
     sockaddr_in addr;
 public:
     UDPAddr (sockaddr_in addr) : addr(addr) {}
+    UDPAddr (const std::string& rawaddr);
 
     bool operator== (const UDPAddr& other) const;
     bool operator!= (const UDPAddr& other) const;

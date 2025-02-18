@@ -38,18 +38,32 @@ int main (int argc, char* argv[]) {
 
         int maxlen = 1024;
         std::cout << "started on port: " << port << std::endl;
-        auto msg = std::string(maxlen, ' ');
+        auto buffer = new char[maxlen];
+        auto users = std::vector<UDPAddr>();
 
         while (true) {
-            auto[len, addr] = conn.ReadFrom(&msg[0], maxlen);
+            auto[len, addr] = conn.ReadFrom(buffer, maxlen);
+            buffer[len] = '\0';
+            std::cout << addr << " msg[" << len << "]: " << buffer << std::endl;
+
+            auto spacepos = strchr(buffer, ' ');
+            if (spacepos == nullptr) continue;
+
+            auto command = std::string(buffer, spacepos);
+            auto msg = std::string(spacepos + 1, buffer + len);
             
-            std::cout << "recieved: " << len << "bytes from: " << addr << std::endl;
+            if (command == "/hello") {
+                users.push_back(addr);
+            }
 
-            conn.WriteTo("hello", 7, addr);
-
-            // Server loop
+            if (command == "/c") {
+                for (const auto& user : users) {
+                    conn.WriteTo(msg.c_str(), msg.length(), user);
+                }
+            }
         }
 
+        delete[] buffer;
     } catch (const std::exception& e) {
         std::cerr << e.what() << '\n';
         return 1;
