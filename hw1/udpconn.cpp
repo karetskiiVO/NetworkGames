@@ -78,8 +78,15 @@ void UDPConn::WriteTo (const uint8_t* buffer, int size, const UDPAddr& addr) con
         throw std::runtime_error("can't write");
 }
 
+bool UDPAddr::operator< (const UDPAddr& other) const {
+    if (this->addr.sin_addr.S_un.S_addr == other.addr.sin_addr.S_un.S_addr) {
+        return this->addr.sin_port < other.addr.sin_port;
+    }
+    return this->addr.sin_addr.S_un.S_addr < other.addr.sin_addr.S_un.S_addr;;
+}
+
 bool UDPAddr::operator== (const UDPAddr& other) const {
-    return memcmp(&(this->addr), &(other.addr), sizeof(sockaddr_in));
+    return this->addr.sin_addr.S_un.S_addr == other.addr.sin_addr.S_un.S_addr && this->addr.sin_port == other.addr.sin_port;
 }
 
 bool UDPAddr::operator!= (const UDPAddr& other) const {

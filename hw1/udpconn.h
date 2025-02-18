@@ -13,10 +13,10 @@ public:
 
     bool operator== (const UDPAddr& other) const;
     bool operator!= (const UDPAddr& other) const;
+    bool operator< (const UDPAddr& other) const;
 
     friend std::ostream& operator<< (std::ostream& stream, const UDPAddr& addr);
 };
-
 
 class UDPConn {
     SOCKET sockfd;
